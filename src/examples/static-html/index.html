@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>onchain-attribution-kit — Static HTML Example</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.6rem; color: #58a6ff; margin-bottom: 0.25rem; }
+    .subtitle { color: #8b949e; margin-bottom: 2rem; font-size: 0.95rem; }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 { font-size: 1rem; color: #f0f6fc; margin: 0 0 1rem 0; }
+    label { display: block; font-size: 0.85rem; color: #8b949e; margin-bottom: 0.3rem; }
+    input {
+      width: 100%;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    input:focus { outline: 2px solid #58a6ff; border-color: transparent; }
+    button {
+      background: #238636;
+      color: #ffffff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #2ea043; }
+    button:disabled { background: #21262d; color: #6e7681; cursor: not-allowed; }
+    .status {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      display: none;
+    }
+    .status.success { background: #0f2a1a; border: 1px solid #238636; color: #3fb950; display: block; }
+    .status.error { background: #2a0f0f; border: 1px solid #f85149; color: #f85149; display: block; }
+    .status.info { background: #0d1f3a; border: 1px solid #58a6ff; color: #79c0ff; display: block; }
+    .params-display {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-bottom: 1rem;
+    }
+    .params-display .key { color: #79c0ff; }
+    .params-display .value { color: #3fb950; }
+    .test-urls { display: flex; flex-direction: column; gap: 0.5rem; }
+    .test-url {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #58a6ff;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+    .test-url:hover { border-color: #58a6ff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>onchain-attribution-kit</h1>
+    <p class="subtitle">Static HTML example. Open this page with UTM params to test attribution capture.</p>
+
+    <div class="card">
+      <h2>Detected campaign context</h2>
+      <div class="params-display" id="params-display">Loading...</div>
+    </div>
+
+    <div class="card">
+      <h2>Simulate wallet connect</h2>
+      <label for="wallet-input">Wallet address (any 0x address)</label>
+      <input
+        type="text"
+        id="wallet-input"
+        placeholder="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+        value="0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+      />
+      <label for="chain-input">Chain ID</label>
+      <input
+        type="number"
+        id="chain-input"
+        placeholder="1 (Ethereum mainnet)"
+        value="1"
+      />
+      <button id="connect-btn">Connect Wallet</button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>Test URLs</h2>
+      <p style="color:#8b949e;font-size:0.85rem;margin-top:0;">Click a URL to reload with test UTM params.</p>
+      <div class="test-urls">
+        <a class="test-url" href="?utm_source=x&utm_medium=social&utm_campaign=test-launch&utm_content=thread-01">
+          utm_source=x utm_medium=social utm_campaign=test-launch utm_content=thread-01
+        </a>
+        <a class="test-url" href="?utm_source=discord&utm_medium=community&utm_campaign=quest-may&kol=influencer_0x1">
+          utm_source=discord utm_medium=community utm_campaign=quest-may kol=influencer_0x1
+        </a>
+        <a class="test-url" href="?ref=0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045&utm_source=referral&utm_campaign=launch-q2-2026">
+          ref=wallet_address utm_source=referral utm_campaign=launch-q2-2026
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Opt-out test</h2>
+      <button id="disable-btn" style="background:#6e7681;">Disable attribution</button>
+      <span style="color:#8b949e;font-size:0.85rem;margin-left:1rem;">Sets window.ONCHAIN_ATTRIBUTION_DISABLED = true</span>
+    </div>
+  </div>
+
+  <script type="module">
+    // Inline attribution capture (mirrors browser-snippet.ts logic for demo purposes)
+    // In production, import the compiled browser-snippet.ts bundle.
+
+    const ENDPOINT = '/api/attribution/event';
+    const WRITE_KEY = 'dev-write-key'; // matches ONCHAIN_ATTRIBUTION_WRITE_KEY in .env
+    const STORAGE_KEY = 'onchain_attribution_context';
+    const WINDOW_DAYS = 7;
+
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+    }
+
+    function getParam(key) {
+      return new URLSearchParams(window.location.search).get(key);
+    }
+
+    function captureContext() {
+      return {
+        session_id: generateUUID(),
+        landing_url: window.location.href,
+        referrer: document.referrer || '',
+        captured_at: new Date().toISOString(),
+        utm_source: getParam('utm_source'),
+        utm_medium: getParam('utm_medium'),
+        utm_campaign: getParam('utm_campaign'),
+        utm_content: getParam('utm_content'),
+        utm_term: getParam('utm_term'),
+        campaign_id: getParam('campaign_id'),
+        ref: getParam('ref'),
+        invite: getParam('invite'),
+        kol: getParam('kol'),
+        source_wallet: getParam('source_wallet'),
+        chain_id: getParam('chain_id') ? parseInt(getParam('chain_id')) : null,
+      };
+    }
+
+    function getStored() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const stored = JSON.parse(raw);
+        const age = Date.now() - new Date(stored.captured_at).getTime();
+        if (age > WINDOW_DAYS * 86400000) { localStorage.removeItem(STORAGE_KEY); return null; }
+        return stored;
+      } catch { return null; }
+    }
+
+    function displayParams(ctx) {
+      const el = document.getElementById('params-display');
+      const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','campaign_id','ref','kol','source_wallet','chain_id','session_id','landing_url'];
+      const rows = keys.map(k => {
+        const v = ctx[k];
+        if (v === null || v === '') return null;
+        return `<span class="key">${k}</span>: <span class="value">${v}</span>`;
+      }).filter(Boolean);
+      el.innerHTML = rows.length ? rows.join('<br>') : '<span style="color:#6e7681">No campaign params detected. Try one of the test URLs below.</span>';
+    }
+
+    // Init
+    const fresh = captureContext();
+    const hasParams = fresh.utm_source || fresh.utm_campaign || fresh.ref || fresh.kol;
+    if (hasParams) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh)); } catch {}
+    }
+    const ctx = getStored() || fresh;
+    displayParams(ctx);
+
+    // Connect wallet
+    document.getElementById('connect-btn').addEventListener('click', async () => {
+      if (window.ONCHAIN_ATTRIBUTION_DISABLED) {
+        showStatus('Attribution is disabled (window.ONCHAIN_ATTRIBUTION_DISABLED = true).', 'info');
+        return;
+      }
+      const address = document.getElementById('wallet-input').value.trim();
+      const chainId = parseInt(document.getElementById('chain-input').value, 10) || 1;
+      if (!address.match(/^0x[0-9a-fA-F]{40}$/)) {
+        showStatus('Invalid wallet address. Use a 0x address with 40 hex characters.', 'error');
+        return;
+      }
+      const btn = document.getElementById('connect-btn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      const payload = {
+        event_id: generateUUID(),
+        event_type: 'wallet_connected',
+        wallet_address: address.toLowerCase(),
+        chain_id: chainId,
+        connected_at: new Date().toISOString(),
+        attribution_model: 'last_touch',
+        metadata: {},
+        ...ctx,
+      };
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${WRITE_KEY}` },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (res.ok) {
+          showStatus(`Event stored!\n\n${JSON.stringify(payload, null, 2)}`, 'success');
+        } else {
+          showStatus(`Error ${res.status}: ${JSON.stringify(json, null, 2)}`, 'error');
+        }
+      } catch (err) {
+        showStatus(`Network error: ${err.message}\n\nMake sure the server is running: npm run dev`, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Connect Wallet';
+      }
+    });
+
+    document.getElementById('disable-btn').addEventListener('click', () => {
+      window.ONCHAIN_ATTRIBUTION_DISABLED = true;
+      showStatus('Attribution disabled for this session. window.ONCHAIN_ATTRIBUTION_DISABLED = true', 'info');
+    });
+
+    function showStatus(msg, type) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = `status ${type}`;
+    }
+  </script>
+</body>
+</html>
