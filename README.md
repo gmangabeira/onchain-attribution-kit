@@ -10,6 +10,8 @@ Open-source onchain attribution for Web3 growth teams. Capture UTMs at wallet co
 
 *Built by [Gabriel Mangabeira](https://mangabeira.net) — Web3 growth consultant*
 
+![Onchain Attribution Dashboard example](https://lh3.googleusercontent.com/d/1j6GjOhZM-xxZuUSho9ty0dzkvBlvsf5p)
+
 ```mermaid
 flowchart LR
   A[Campaign Link with UTMs] --> B[Landing Page]
