@@ -1,34 +1,14 @@
 # onchain-attribution-kit
 
-Open-source onchain attribution for Web3 growth teams. Capture UTMs at wallet connect, join campaigns to Dune activity, and send alerts to Telegram, Discord, or Slack.
+Open-source onchain attribution for Web3 growth teams. Capture UTMs at wallet connect, join campaigns to Dune activity, alert to Telegram, Discord, or Slack.
 
-**Basic setup in ~30 minutes.**
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Dune Analytics](https://img.shields.io/badge/Dune-Analytics-orange?style=flat)](https://dune.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gmangabeira/onchain-attribution-kit/pulls)
 
----
-
-## What it is
-
-A free, forkable starter kit that connects off-chain campaign traffic to wallet connections and downstream on-chain actions. It fills the gap between your UTM links and your Dune analytics.
-
-## Who it is for
-
-- Web3 growth leads who need to know which campaigns produce wallets that actually transact
-- Protocol engineers who want reusable templates for attribution plumbing
-- Web3 growth agencies and consultants who need a repeatable attribution baseline for clients
-
-## What it does not solve
-
-- Multi-wallet identity resolution (one user, multiple wallets)
-- Deterministic attribution across more than one touch point
-- Bot and sybil detection (wallet quality scoring is a heuristic, not a guarantee)
-- Privacy compliance advice
-- Hosted analytics or a SaaS dashboard
-
-See [docs/limitations.md](docs/limitations.md) for the full list.
-
----
-
-## Architecture
+*Built by [Gabriel Mangabeira](https://mangabeira.net) — Web3 growth consultant*
 
 ```mermaid
 flowchart LR
@@ -45,6 +25,38 @@ flowchart LR
   I --> L[Slack]
   G --> M[Claude Code Attribution Agent]
 ```
+
+---
+
+## Table of Contents
+
+- [The problem](#the-problem)
+- [Who this is for](#who-this-is-for)
+- [Quickstart](#quickstart)
+- [What an alert looks like](#what-an-alert-looks-like)
+- [What's included](#whats-included)
+- [Dune SQL query pack](#dune-sql-query-pack)
+- [Claude Code agent](#claude-code-agent)
+- [Attribution payload schema](#attribution-payload-schema)
+- [Environment variables](#environment-variables)
+- [Production considerations](#production-considerations)
+- [Limitations](#limitations)
+- [Contributing](#contributing)
+- [Built by](#built-by)
+
+---
+
+## The problem
+
+GA4 sees the click. Dune sees the transaction. Nothing connects them.
+
+Web3 protocols spend on influencers, paid social, and KOL campaigns and have no way to know which of those wallets ever did a swap, staked, or bridged. This kit fills that gap with a lightweight, forkable attribution layer you own entirely.
+
+## Who this is for
+
+- **Web3 growth leads** who need to know which campaigns produce wallets that actually transact, not just connect
+- **Protocol engineers** who want reusable, commented templates for attribution plumbing
+- **Web3 growth agencies and consultants** who need a repeatable attribution baseline for clients
 
 ---
 
@@ -65,17 +77,41 @@ cp .env.example .env
 # 4. Start the local server
 npm run dev
 
-# 5. Open the example page with UTM params
-# http://localhost:3000/?utm_source=x&utm_medium=social&utm_campaign=test-launch&utm_content=thread-01
+# 5. Open the test page with UTM params to simulate an attribution event
+# http://localhost:3000/?utm_source=x&utm_medium=social&utm_campaign=launch-q2-2026&utm_content=thread-01
+```
 
-# 6. Click "Connect Wallet" to simulate an attribution event
+Click "Connect Wallet" on the test page to fire an attribution event, then verify it was stored:
 
-# 7. Check that an event was stored
+```bash
 cat data/events.jsonl
+```
 
-# 8. Test alert formatting (dry run — no messages sent)
+Test alert formatting (dry run, no messages sent):
+
+```bash
 npm run test:alert
 ```
+
+---
+
+## What an alert looks like
+
+When a campaign crosses your conversion threshold, the alert runner sends a formatted summary to Telegram, Discord, or Slack:
+
+```
+Onchain attribution alert
+
+Campaign: launch-q2-2026
+Source: x / social
+Wallets captured: 42
+Converted wallets: 9
+Conversion rate: 21.4%
+Top action: first_swap
+Window: last 24h
+```
+
+Three channels are supported equally. See [`docs/alerts.md`](docs/alerts.md) for setup.
 
 ---
 
@@ -97,21 +133,7 @@ npm run test:alert
 - Auth via `ONCHAIN_ATTRIBUTION_WRITE_KEY` header
 - Default storage: append-only JSONL + CSV at `data/events.jsonl` / `data/events.csv`
 
-### 3. Dune SQL query pack (`sql/dune/`)
-
-Five commented, template-style queries:
-
-| File | Purpose |
-|---|---|
-| `01_campaign_wallets.sql` | Base table of attributed wallets from CSV upload |
-| `02_first_onchain_action.sql` | First on-chain action after wallet connect (EVM example) |
-| `03_campaign_conversion_summary.sql` | Campaign-level metrics: wallets, conversions, rate, volume |
-| `04_channel_quality_score.sql` | Lightweight wallet quality scoring |
-| `05_daily_attribution_timeseries.sql` | Daily time series for dashboard charts |
-
-### 4. Alerts (`src/alerts/`)
-
-Three channels supported equally:
+### 3. Alert channels (`src/alerts/`)
 
 | Channel | Format | File |
 |---|---|---|
@@ -119,25 +141,13 @@ Three channels supported equally:
 | Discord | Markdown | `src/alerts/discord.ts` |
 | Slack | Block Kit | `src/alerts/slack.ts` |
 
-Test alerts:
-```bash
-# Dry run (no messages sent)
-npm run test:alert
+Send to a specific channel:
 
-# Send to specific channel
+```bash
 ts-node scripts/send-test-alert.ts --channel telegram
 ```
 
-### 5. Claude Code agent template (`src/agents/claude-code-agent.md`)
-
-Copy-paste prompt for Claude Code to operate daily attribution checks:
-- Inspect event files
-- Compare campaign performance
-- Detect anomalies
-- Draft daily summaries with careful attribution language
-- Recommend scale / pause / inspect per campaign
-
-### 6. Documentation (`docs/`)
+### 4. Documentation (`docs/`)
 
 - [Setup guide](docs/setup.md)
 - [Campaign schema and UTM taxonomy](docs/campaign-schema.md)
@@ -149,6 +159,35 @@ Copy-paste prompt for Claude Code to operate daily attribution checks:
 - [Multi-chain notes](docs/multi-chain-notes.md)
 - [Limitations](docs/limitations.md)
 - [Troubleshooting](docs/troubleshooting.md)
+
+---
+
+## Dune SQL query pack
+
+Five commented, template-style queries in [`sql/dune/`](sql/dune/):
+
+| File | Purpose |
+|---|---|
+| `01_campaign_wallets.sql` | Base table of attributed wallets from CSV upload |
+| `02_first_onchain_action.sql` | First on-chain action after wallet connect (EVM example) |
+| `03_campaign_conversion_summary.sql` | Campaign-level metrics: wallets, conversions, rate, volume |
+| `04_channel_quality_score.sql` | Lightweight wallet quality scoring |
+| `05_daily_attribution_timeseries.sql` | Daily time series for dashboard charts |
+
+Each query is parameterized. Drop your campaign slug and chain ID into the variables block at the top and run against your uploaded `events.csv`.
+
+---
+
+## Claude Code agent
+
+The kit ships with a Claude Code agent template at [`src/agents/claude-code-agent.md`](src/agents/claude-code-agent.md) for daily attribution ops.
+
+Copy-paste the prompt into Claude Code to:
+- Inspect event files and summarize activity
+- Compare campaign performance across time windows
+- Detect anomalies (sudden drop-off, wallet quality shift)
+- Draft daily summaries with careful attribution language
+- Recommend scale / pause / inspect per campaign
 
 ---
 
@@ -197,7 +236,7 @@ Copy-paste prompt for Claude Code to operate daily attribution checks:
 
 ## Production considerations
 
-This kit is designed for local/dev use out of the box. Before running in production:
+This kit is designed for local and dev use out of the box. Before running in production:
 
 1. **Auth:** The write key is a shared secret. Move to per-campaign keys or signed JWTs for higher-volume production use.
 2. **Storage:** Replace `LocalFileAdapter` with a Postgres or Supabase adapter for durability and query access.
@@ -207,10 +246,36 @@ This kit is designed for local/dev use out of the box. Before running in product
 
 ---
 
-## License
+## Limitations
 
-MIT — free to use, fork, and adapt. See [LICENSE](LICENSE).
+This kit is a starting point, not a complete attribution system. It does not solve:
+
+- Multi-wallet identity resolution (one user, multiple wallets)
+- Deterministic attribution across more than one touch point
+- Bot and sybil detection (wallet quality scoring is a heuristic, not a guarantee)
+- Privacy compliance advice
+- Hosted analytics or a SaaS dashboard
+
+See [docs/limitations.md](docs/limitations.md) for the full list.
 
 ---
 
-Need help adapting this to your protocol? Book an attribution stack review at [mangabeira.net](https://mangabeira.net).
+## Contributing
+
+Issues, PRs, and protocol adapter requests welcome. See [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) for the available issue types.
+
+If you add support for a new chain or a new alert channel, open a PR. The architecture is designed for adapters.
+
+---
+
+## Built by
+
+[Gabriel Mangabeira](https://mangabeira.net) — Web3 growth consultant. Ex-Binance LATAM.
+
+I built this because the attribution gap was real in every Web3 protocol I've worked with. Every growth team I've audited was flying blind on which campaigns actually produced on-chain activity.
+
+If you need help adapting this to your protocol, [book an attribution stack review](https://mangabeira.net/services/web3-growth-audit).
+
+---
+
+*MIT License — free to use, fork, and adapt. See [LICENSE](LICENSE).*
