@@ -55,8 +55,9 @@ const storage = new LocalFileAdapter(EVENTS_FILE);
  * Accepts an attribution event payload from the browser snippet.
  */
 app.post('/api/attribution/event', (req: Request, res: Response) => {
-  // Auth
-  if (WRITE_KEY && !validateWriteKey(req.headers['authorization'], WRITE_KEY)) {
+  // Auth — fail closed. If no write key is configured, reject every write
+  // (matches the startup warning). Never accept writes on a misconfigured server.
+  if (!WRITE_KEY || !validateWriteKey(req.headers['authorization'], WRITE_KEY)) {
     res.status(401).json({ error: 'Unauthorized. Invalid or missing write key.' });
     return;
   }
