@@ -276,6 +276,8 @@ If you add support for a new chain or a new alert channel, open a PR. The archit
 
 I built this because the attribution gap was real in every Web3 protocol I've worked with. Every growth team I've audited was flying blind on which campaigns actually produced on-chain activity.
 
+The wider strategy this fits into is covered in [my guide to Web3 SEO](https://mangabeira.net/publications/definitive-guide-web3-seo), including the exact GA4 event schema and Dune join pattern this kit implements.
+
 If you need help adapting this to your protocol, [book an attribution stack review](https://mangabeira.net/services/web3-growth-audit).
 
 ---
