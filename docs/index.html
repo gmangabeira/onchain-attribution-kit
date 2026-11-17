@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onchain Attribution Kit: UTM to wallet attribution with Dune SQL</title>
+<meta name="description" content="Open-source onchain attribution for Web3 growth teams: capture UTMs at wallet connect, join campaigns to Dune activity, and alert to Telegram, Discord or Slack.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Gabriel Mangabeira">
+<link rel="canonical" href="https://gmangabeira.github.io/onchain-attribution-kit/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Onchain Attribution Kit: UTM to wallet attribution with Dune SQL">
+<meta property="og:description" content="Open-source onchain attribution for Web3 growth teams: capture UTMs at wallet connect, join campaigns to Dune activity, and alert to Telegram, Discord or Slack.">
+<meta property="og:url" content="https://gmangabeira.github.io/onchain-attribution-kit/">
+<meta property="og:site_name" content="onchain-attribution-kit docs">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/gmangabeira/onchain-attribution-kit">
+<meta property="og:image:alt" content="onchain-attribution-kit repository card">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Onchain Attribution Kit: UTM to wallet attribution with Dune SQL">
+<meta name="twitter:description" content="Open-source onchain attribution for Web3 growth teams: capture UTMs at wallet connect, join campaigns to Dune activity, and alert to Telegram, Discord or Slack.">
+<meta name="twitter:image" content="https://opengraph.githubassets.com/1/gmangabeira/onchain-attribution-kit">
+<meta name="theme-color" content="#0A2540">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "onchain-attribution-kit", "description": "Open-source onchain attribution for Web3 growth teams: capture UTMs at wallet connect, join campaigns to Dune activity, and alert to Telegram, Discord or Slack.", "url": "https://gmangabeira.github.io/onchain-attribution-kit/", "codeRepository": "https://github.com/gmangabeira/onchain-attribution-kit", "license": "https://opensource.org/licenses/MIT", "keywords": ["web3", "attribution", "onchain", "utm", "wallet", "dune", "telegram", "discord", "slack"], "author": {"@type": "Person", "name": "Gabriel Mangabeira", "url": "https://mangabeira.net", "sameAs": ["https://linkedin.com/in/mangabeira", "https://github.com/gmangabeira"]}, "programmingLanguage": "TypeScript"}</script>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="./">onchain-attribution-kit<span>.</span></a>
+    <nav aria-label="Sections"><ul><li><a href="#how">How it works</a></li><li><a href="#features">Features</a></li><li><a href="#quickstart">Quickstart</a></li><li><a href="#dune">Dune SQL</a></li><li><a href="#docs">Docs</a></li></ul></nav>
+    <a class="gh" href="https://github.com/gmangabeira/onchain-attribution-kit">View on GitHub</a>
+  </div>
+</header>
+<main>
+
+<section class="hero" style="border-top:0">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Open source, MIT, TypeScript</span>
+      <h1>Onchain Attribution Kit</h1>
+      <p class="lede">Capture UTMs at wallet connect, join campaigns to Dune activity, and alert to Telegram, Discord or Slack. <strong>Know which campaigns produce wallets that transact</strong>, not just connect.</p>
+      <div class="btns">
+        <a class="btn primary" href="https://github.com/gmangabeira/onchain-attribution-kit"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg> View on GitHub</a>
+        <a class="btn" href="#quickstart">Quickstart</a>
+        <a class="btn" href="#docs">Docs</a>
+      </div>
+      <div class="badges"><span class="badge">TypeScript</span><span class="badge">Node.js 18+</span><span class="badge">Dune SQL</span><span class="badge g">MIT License</span><span class="badge">PRs welcome</span></div>
+    </div>
+    <div class="hero-card">
+      <p class="codehead">What an alert looks like</p>
+      <pre style="margin:0"><code>Onchain attribution alert
+
+Campaign: launch-q2-2026
+Source: x / social
+Wallets captured: 42
+Converted wallets: 9
+Conversion rate: 21.4%
+Top action: first_swap
+Window: last 24h</code></pre>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap grid g2" style="align-items:center;gap:40px">
+    <blockquote class="quote">GA4 sees the click. Dune sees the transaction. Nothing connects them.</blockquote>
+    <div>
+      <p class="kicker">The problem</p>
+      <p>Web3 protocols spend on influencers, paid social and KOL campaigns and have no way to know which of those wallets ever did a swap, staked or bridged. This kit fills that gap with a lightweight, forkable attribution layer you own entirely.</p>
+      <p class="note">Built for Web3 growth leads, protocol engineers who want commented templates for attribution plumbing, and agencies or consultants who need a repeatable attribution baseline.</p>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="alt">
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>From campaign link to onchain conversion</h2>
+    <p class="sub">The browser snippet keeps campaign context until a wallet connects, the receiver stores one event per connect, and the Dune query pack joins those wallets to what they did onchain.</p>
+    <div class="diagram"><svg class="wide" viewBox="0 0 970 330" role="img" aria-label="How the onchain attribution kit works: campaign link to capture snippet to wallet connect to event receiver to Dune queries, then dashboard, alerts and the Claude Code agent" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, system-ui, sans-serif"><title>How the onchain attribution kit works: campaign link to capture snippet to wallet connect to event receiver to Dune queries, then dashboard, alerts and the Claude Code agent</title><defs><marker id="ow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B9BAD"/></marker><marker id="owg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#FFB800"/></marker></defs><rect x="0" y="30" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="80.0" y="59.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Campaign link</text><text x="80.0" y="78.0" text-anchor="middle" font-size="12" fill="#8B9BAD">UTMs + ref, kol,</text><text x="80.0" y="94.0" text-anchor="middle" font-size="12" fill="#8B9BAD">invite, campaign_id</text><polyline points="162,72 196,72" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ow)"/><rect x="200" y="30" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="280.0" y="59.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Capture snippet</text><text x="280.0" y="78.0" text-anchor="middle" font-size="12" fill="#8B9BAD">stores context in</text><text x="280.0" y="94.0" text-anchor="middle" font-size="12" fill="#8B9BAD">localStorage (7 days)</text><polyline points="362,72 396,72" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ow)"/><rect x="400" y="30" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="480.0" y="59.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Wallet connect</text><text x="480.0" y="78.0" text-anchor="middle" font-size="12" fill="#8B9BAD">fires one payload</text><text x="480.0" y="94.0" text-anchor="middle" font-size="12" fill="#8B9BAD">per connect</text><polyline points="562,72 596,72" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ow)"/><rect x="600" y="30" width="160" height="84" rx="12" fill="#0D3558" stroke="#1FB6FF" stroke-width="2"/><text x="680.0" y="59.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Event receiver</text><text x="680.0" y="78.0" text-anchor="middle" font-size="12" fill="#8B9BAD">POST /api/</text><text x="680.0" y="94.0" text-anchor="middle" font-size="12" fill="#8B9BAD">attribution/event</text><polyline points="762,72 796,72" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ow)"/><rect x="800" y="30" width="160" height="84" rx="12" fill="#0D3558" stroke="#FFB800" stroke-width="2"/><text x="880.0" y="59.0" text-anchor="middle" font-size="15" font-weight="700" fill="#FFB800">Dune query pack</text><text x="880.0" y="78.0" text-anchor="middle" font-size="12" fill="#8B9BAD">5 SQL templates</text><text x="880.0" y="94.0" text-anchor="middle" font-size="12" fill="#8B9BAD">on uploaded CSV</text><text x="700" y="140" text-anchor="middle" font-size="12" font-weight="600" fill="#1FB6FF">events.jsonl + events.csv</text><polyline points="880,116 880,170" fill="none" stroke="#FFB800" stroke-width="1.6"/><polyline points="480,170 880,170" fill="none" stroke="#FFB800" stroke-width="1.6"/><polyline points="480,170 480,224" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#owg)"/><rect x="400" y="228" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="480.0" y="266.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Dashboard</text><text x="480.0" y="285.0" text-anchor="middle" font-size="12" fill="#8B9BAD">campaign attribution</text><polyline points="680,170 680,224" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#owg)"/><rect x="600" y="228" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="680.0" y="257.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Alert runner</text><text x="680.0" y="276.0" text-anchor="middle" font-size="12" fill="#8B9BAD">Telegram, Discord,</text><text x="680.0" y="292.0" text-anchor="middle" font-size="12" fill="#8B9BAD">Slack</text><polyline points="880,170 880,224" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#owg)"/><rect x="800" y="228" width="160" height="84" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="880.0" y="266.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Claude Code agent</text><text x="880.0" y="285.0" text-anchor="middle" font-size="12" fill="#8B9BAD">daily ops prompt</text><rect x="0" y="228" width="360" height="84" rx="12" fill="none" stroke="rgba(61,220,151,.55)" stroke-dasharray="5 5"/><text x="180" y="262" text-anchor="middle" font-size="14" font-weight="700" fill="#3DDC97">Privacy by default</text><text x="180" y="284" text-anchor="middle" font-size="12" font-weight="400" fill="#8B9BAD">no email, IP or device fingerprint</text><text x="180" y="300" text-anchor="middle" font-size="11" font-weight="400" fill="#8B9BAD">opt-out: ONCHAIN_ATTRIBUTION_DISABLED</text></svg><svg class="tall" viewBox="0 0 340 704" role="img" aria-label="How the onchain attribution kit works, stacked view" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat, system-ui, sans-serif"><title>How the onchain attribution kit works, stacked view</title><defs><marker id="ot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8B9BAD"/></marker><marker id="otg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#FFB800"/></marker></defs><rect x="20" y="10" width="300" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="170.0" y="41.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Campaign link</text><text x="170.0" y="60.0" text-anchor="middle" font-size="12" fill="#8B9BAD">UTMs + ref, kol, invite, campaign_id</text><polyline points="170,82 170,106" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ot)"/><rect x="20" y="110" width="300" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="170.0" y="141.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Capture snippet</text><text x="170.0" y="160.0" text-anchor="middle" font-size="12" fill="#8B9BAD">stores context in localStorage (7 days)</text><polyline points="170,182 170,206" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ot)"/><rect x="20" y="210" width="300" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="170.0" y="241.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Wallet connect</text><text x="170.0" y="260.0" text-anchor="middle" font-size="12" fill="#8B9BAD">fires one payload per connect</text><polyline points="170,282 170,306" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ot)"/><rect x="20" y="310" width="300" height="70" rx="12" fill="#0D3558" stroke="#1FB6FF" stroke-width="2"/><text x="170.0" y="341.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Event receiver</text><text x="170.0" y="360.0" text-anchor="middle" font-size="12" fill="#8B9BAD">POST /api/ attribution/event</text><polyline points="170,382 170,406" fill="none" stroke="#8B9BAD" stroke-width="1.6" marker-end="url(#ot)"/><rect x="20" y="410" width="300" height="70" rx="12" fill="#0D3558" stroke="#FFB800" stroke-width="2"/><text x="170.0" y="441.0" text-anchor="middle" font-size="15" font-weight="700" fill="#FFB800">Dune query pack</text><text x="170.0" y="460.0" text-anchor="middle" font-size="12" fill="#8B9BAD">5 SQL templates on uploaded CSV</text><polyline points="170,480 170,505" fill="none" stroke="#FFB800" stroke-width="1.6"/><polyline points="60,505 280,505" fill="none" stroke="#FFB800" stroke-width="1.6"/><polyline points="60,505 60,528" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#otg)"/><polyline points="170,505 170,528" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#otg)"/><polyline points="280,505 280,528" fill="none" stroke="#FFB800" stroke-width="1.6" marker-end="url(#otg)"/><rect x="10" y="532" width="100" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="60.0" y="572.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Dashboard</text><rect x="120" y="532" width="100" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="170.0" y="563.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Alerts</text><text x="170.0" y="582.0" text-anchor="middle" font-size="12" fill="#8B9BAD">3 channels</text><rect x="230" y="532" width="100" height="70" rx="12" fill="#0D3558" stroke="rgba(139,155,173,.45)" stroke-width="1.2"/><text x="280.0" y="563.0" text-anchor="middle" font-size="15" font-weight="700" fill="#F7FAFC">Agent</text><text x="280.0" y="582.0" text-anchor="middle" font-size="12" fill="#8B9BAD">Claude Code</text><rect x="20" y="624" width="300" height="70" rx="12" fill="none" stroke="rgba(61,220,151,.55)" stroke-dasharray="5 5"/><text x="170" y="652" text-anchor="middle" font-size="14" font-weight="700" fill="#3DDC97">Privacy by default</text><text x="170" y="674" text-anchor="middle" font-size="12" font-weight="400" fill="#8B9BAD">no email, IP or device fingerprint</text></svg></div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <p class="kicker">What's included</p>
+    <h2>Four parts, each one forkable</h2>
+    <p class="sub">Every part lives in plain files you can read and change. The architecture is designed for adapters: new chains and new alert channels plug in.</p>
+    <div class="grid g2">
+      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><h3>Capture snippet</h3><p><code>src/capture/browser-snippet.ts</code></p><ul><li>Reads UTM params and crypto-native params (<code>ref</code>, <code>kol</code>, <code>invite</code>, <code>campaign_id</code>)</li><li>Persists campaign context in <code>localStorage</code> for a configurable window (default 7 days)</li><li>On wallet connect, POSTs an attribution payload to your backend</li><li>No email, IP or device fingerprint. Opt out with <code>window.ONCHAIN_ATTRIBUTION_DISABLED = true</code></li></ul></div>
+      <div class="card"><div class="icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg></div><h3>Event receiver</h3><p><code>src/server/api.ts</code></p><ul><li><code>POST /api/attribution/event</code> validates and stores events</li><li><code>GET /api/health</code> health check</li><li><code>GET /api/events.csv</code> CSV export for Dune (dev only)</li><li>Auth via the <code>ONCHAIN_ATTRIBUTION_WRITE_KEY</code> header</li><li>Default storage: append-only JSONL + CSV in <code>data/</code></li></ul></div>
+      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><h3>Alert channels</h3><p><code>src/alerts/</code></p><ul><li>Telegram: plain text</li><li>Discord: Markdown</li><li>Slack: Block Kit</li><li>Dry-run test: <code>npm run test:alert</code></li></ul></div>
+      <div class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/></svg></div><h3>Claude Code agent</h3><p><code>src/agents/claude-code-agent.md</code></p><ul><li>Inspect event files and summarize activity</li><li>Compare campaigns across time windows</li><li>Detect anomalies (drop-off, wallet quality shift)</li><li>Draft daily summaries and recommend scale, pause or inspect</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="quickstart" class="alt">
+  <div class="wrap grid g2" style="gap:32px">
+    <div style="min-width:0">
+      <p class="kicker">Quickstart</p>
+      <h2>Running locally in five steps</h2>
+      <p class="sub" style="margin-bottom:20px">Click "Connect Wallet" on the test page to fire an attribution event, then check that it was stored.</p>
+      <p class="codehead">bash</p><pre><code># 1. Clone the repo
+git clone https://github.com/gmangabeira/onchain-attribution-kit.git
+cd onchain-attribution-kit
+
+# 2. Install dependencies
+npm install
+
+# 3. Configure env vars
+cp .env.example .env
+# Edit .env: set ONCHAIN_ATTRIBUTION_WRITE_KEY and optionally alert vars
+
+# 4. Start the local server
+npm run dev
+
+# 5. Open the test page with UTM params to simulate an attribution event
+# http://localhost:3000/?utm_source=x&amp;utm_medium=social&amp;utm_campaign=launch-q2-2026&amp;utm_content=thread-01</code></pre>
+    </div>
+    <div style="min-width:0">
+      <p class="codehead">Verify the event</p><pre><code>cat data/events.jsonl</code></pre>
+      <p class="codehead">Test alert formatting (dry run, no messages sent)</p><pre><code>npm run test:alert</code></pre>
+      <p class="codehead">Send to one channel</p><pre><code>ts-node scripts/send-test-alert.ts --channel telegram</code></pre>
+      <div class="card"><h3>Environment variables</h3><p>Only <code>ONCHAIN_ATTRIBUTION_WRITE_KEY</code> is required. Optional: <code>PORT</code> (default 3000), <code>EVENTS_FILE</code>, <code>ATTRIBUTION_WINDOW_DAYS</code> (default 7), <code>ALERT_CHANNELS</code>, and the Telegram, Discord or Slack credentials for the channels you use.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="dune">
+  <div class="wrap">
+    <p class="kicker">Dune SQL query pack</p>
+    <h2>Five commented, parameterized queries</h2>
+    <p class="sub">In <a href="https://github.com/gmangabeira/onchain-attribution-kit/tree/main/sql/dune"><code>sql/dune/</code></a>. Drop your campaign slug and chain ID into the variables block at the top and run against your uploaded <code>events.csv</code>.</p>
+    <div class="tbl"><table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td><code>01_campaign_wallets.sql</code></td><td>Base table of attributed wallets from CSV upload</td></tr><tr><td><code>02_first_onchain_action.sql</code></td><td>First onchain action after wallet connect (EVM example)</td></tr><tr><td><code>03_campaign_conversion_summary.sql</code></td><td>Campaign-level metrics: wallets, conversions, rate, volume</td></tr><tr><td><code>04_channel_quality_score.sql</code></td><td>Lightweight wallet quality scoring</td></tr><tr><td><code>05_daily_attribution_timeseries.sql</code></td><td>Daily time series for dashboard charts</td></tr></tbody></table></div>
+    <p class="note">See the <a href="dashboard-example.html">example attribution dashboard</a> for the kind of view these queries feed.</p>
+  </div>
+</section>
+
+<section id="schema" class="alt">
+  <div class="wrap grid g2" style="gap:32px">
+    <div style="min-width:0">
+      <p class="kicker">Attribution payload</p>
+      <h2>One event per wallet connect</h2>
+      <p class="sub" style="margin-bottom:20px">Last-touch by default. The same fields land in JSONL and CSV, ready for a Dune upload.</p>
+      <p class="codehead">json</p><pre><code>{
+  &quot;event_id&quot;: &quot;uuid&quot;,
+  &quot;event_type&quot;: &quot;wallet_connected&quot;,
+  &quot;wallet_address&quot;: &quot;0x...&quot;,
+  &quot;chain_id&quot;: 1,
+  &quot;connected_at&quot;: &quot;2026-05-28T12:00:00Z&quot;,
+  &quot;session_id&quot;: &quot;uuid&quot;,
+  &quot;landing_url&quot;: &quot;https://yourprotocol.xyz/?utm_source=x&amp;utm_campaign=launch&quot;,
+  &quot;referrer&quot;: &quot;https://x.com/...&quot;,
+  &quot;utm_source&quot;: &quot;x&quot;,
+  &quot;utm_medium&quot;: &quot;social&quot;,
+  &quot;utm_campaign&quot;: &quot;launch-q2-2026&quot;,
+  &quot;utm_content&quot;: &quot;thread-01&quot;,
+  &quot;utm_term&quot;: null,
+  &quot;campaign_id&quot;: &quot;launch-q2-2026&quot;,
+  &quot;ref&quot;: null,
+  &quot;kol&quot;: null,
+  &quot;attribution_model&quot;: &quot;last_touch&quot;,
+  &quot;metadata&quot;: {}
+}</code></pre>
+    </div>
+    <div style="min-width:0">
+      <p class="kicker">Before production</p>
+      <div class="steps">
+        <div class="step"><h3>Auth</h3><p class="note">The write key is a shared secret. Move to per-campaign keys or signed JWTs for higher-volume use.</p></div>
+        <div class="step"><h3>Storage</h3><p class="note">Replace <code>LocalFileAdapter</code> with a Postgres or Supabase adapter for durability and query access.</p></div>
+        <div class="step"><h3>CORS</h3><p class="note">Restrict <code>Access-Control-Allow-Origin</code> to your frontend domain.</p></div>
+        <div class="step"><h3>HTTPS</h3><p class="note">Run behind a reverse proxy (nginx, Cloudflare) with TLS.</p></div>
+        <div class="step"><h3>Rate limiting</h3><p class="note">Add rate limiting middleware to the event endpoint.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap grid g2" style="gap:32px">
+    <div>
+      <p class="kicker">Limitations</p>
+      <h2>A starting point, not a full attribution system</h2>
+      <p>It does not solve:</p>
+      <ul class="pill-list"><li>Multi-wallet identity resolution</li><li>Multi-touch deterministic attribution</li><li>Bot and sybil detection</li><li>Privacy compliance advice</li><li>Hosted analytics or a SaaS dashboard</li></ul>
+      <p class="note" style="margin-top:18px">Wallet quality scoring is a heuristic, not a guarantee. Full list in <a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/limitations.md">docs/limitations.md</a>.</p>
+      <p style="margin-top:18px">I built this because every Web3 growth team I audited was flying blind on which campaigns actually produced onchain activity. Attribution is one pillar of the <a href="https://mangabeira.net/services/web3-growth-audit">Web3 growth audit methodology</a> I use with protocols.</p>
+    </div>
+    <div id="docs" class="card">
+      <div class="icon g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+      <h3>Documentation</h3>
+      <p>Guides in the repo's <code>docs/</code> folder:</p>
+      <ul><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/setup.md">Setup guide</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/campaign-schema.md">Campaign schema and UTM taxonomy</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/dune-setup.md">Dune setup</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/alerts.md">Alerts overview</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/telegram.md">Telegram setup</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/discord.md">Discord setup</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/slack.md">Slack setup</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/multi-chain-notes.md">Multi-chain notes</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/limitations.md">Limitations</a></li><li><a href="https://github.com/gmangabeira/onchain-attribution-kit/blob/main/docs/troubleshooting.md">Troubleshooting</a></li></ul>
+      <p style="margin-top:12px">Contributing: issues, PRs and protocol adapter requests are welcome. See the <a href="https://github.com/gmangabeira/onchain-attribution-kit/tree/main/.github/ISSUE_TEMPLATE">issue templates</a>.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<aside class="author" aria-label="About the author">
+  <div class="wrap">
+    <div>
+      <p class="kicker">Author</p>
+      <h3>Gabriel Mangabeira</h3>
+      <p>Two-time Olympian turned growth marketer for AI and Web3. I built this project and keep it open source under the MIT License.</p>
+    </div>
+    <div class="links">
+      <a class="btn" href="https://mangabeira.net" rel="author">mangabeira.net</a>
+      <a class="btn" href="https://linkedin.com/in/mangabeira" rel="me">LinkedIn</a>
+      <a class="btn" href="https://github.com/gmangabeira" rel="me">GitHub</a>
+    </div>
+  </div>
+</aside>
+
+<footer><div class="wrap"><span>MIT License. Source and issues on <a href="https://github.com/gmangabeira/onchain-attribution-kit">GitHub</a>.</span><span>Docs for the open-source project onchain-attribution-kit.</span></div></footer>
+</body>
+</html>

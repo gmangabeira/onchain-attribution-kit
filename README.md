@@ -1,5 +1,7 @@
 # onchain-attribution-kit
 
+**Docs:** https://gmangabeira.github.io/onchain-attribution-kit/
+
 Open-source onchain attribution for Web3 growth teams. Capture UTMs at wallet connect, join campaigns to Dune activity, alert to Telegram, Discord, or Slack.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)

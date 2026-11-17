@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gmangabeira.github.io/onchain-attribution-kit/sitemap.xml
